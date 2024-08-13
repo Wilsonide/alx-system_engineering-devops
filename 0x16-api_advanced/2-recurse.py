@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 """ recursive function that queries the Reddit API """
 import requests
-import sys
 after = None
 
 
-def recurse(subreddit, hot_list=[]):
+def recurse(subreddit, hot_list=None):
+    if hot_list is None:
+        hot_list = []
     """     Args:
         subreddit: subreddit name
         hot_list: list of hot titles in subreddit
@@ -19,9 +20,13 @@ def recurse(subreddit, hot_list=[]):
     parameters = {'after': after}
     response = requests.get(url, headers=headers, allow_redirects=False,
                             params=parameters)
+    print("response: ", response.json().get("data").get("after"))
+    print("================================================")
 
     if response.status_code == 200:
         next_ = response.json().get('data').get('after')
+        print("Next: ", next)
+        print("================================================")
         if next_ is not None:
             after = next_
             recurse(subreddit, hot_list)
